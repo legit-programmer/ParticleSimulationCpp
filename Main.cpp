@@ -24,6 +24,7 @@ std::uniform_int_distribution<> hdistr(0, HEIGHT);// define the range
 SDL_Window* window = SDL_CreateWindow("Particle Simulation", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, 0);
 SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
+
 void GenerateParticles(int red_cout, int blue_count, int green_count) {
 
 	for (int i = 0; i < red_cout; i++)
@@ -57,44 +58,37 @@ void applyRule(vector<Particle>* particle1, vector<Particle>* particle2, int str
 
 	for (int i = 0; i < particle1->size(); i++) {
 		for (int j = 0; j < particle2->size(); j++) {
-			Particle* p1 = &particle1->at(i);
-			Particle* p2 = &particle2->at(j);
-			float dx = p2->x - p1->x;
-			float dy = p2->y - p1->y;
-			float distance = sqrt(pow(dx, 2) + pow(dy, 2));
-			if (distance < 80) {
-				float force = 1 / distance * strength;
-				float fx = dx * force;
-				float fy = dy * force;
-				p1->x_vel = p1->x_vel + fx;
-				p1->y_vel = p1->y_vel + fy;
+			if (&particle1->at(i) != &particle2->at(j)) {
+				Particle* p1 = &particle1->at(i);
+				Particle* p2 = &particle2->at(j);
+				float dx = p2->x - p1->x;
+				float dy = p2->y - p1->y;
+				float distance = sqrt(pow(dx, 2) + pow(dy, 2));
+				if (distance < 20) {
+					float force = 1 / distance * strength * 0.005;
+					float fx = dx * force  ;
+					float fy = dy * force  ;
+					p1->x_vel =  p1->x_vel + fx;
+					p1->y_vel = p1->y_vel + fy;
 
-				p1->x += p1->x_vel * 0.005;
-				p1->y += p1->y_vel * 0.005;
-			}
-			
-			
-			if (p1->x <= 0 || p1->x >= WIDTH)
-			{
+					p1->x += p1->x_vel;
+					p1->y += p1->y_vel;
+				}
+
+
+				if (p1->x <= 0 || p1->x >= WIDTH)
+				{
+
+					p1->x = p1->x<0?0:WIDTH;
+					p1->x_vel = p1->x_vel * -1;
+				}
+				if (p1->y <= 0 || p1->y >= HEIGHT)
+				{
+					p1->y = p1->y<0?0:HEIGHT;
+					p1->y_vel = p1->y_vel * -1;
+
+				}
 				
-
-				p1->x_vel = p1->x_vel * -1;
-			}
-			if (p1->y <= 0 || p1->y >= HEIGHT)
-			{
-				p1->y_vel = p1->y_vel * -1;
-				
-			}
-			if (p2->x <= 0 || p2->x >= WIDTH)
-			{
-				
-
-				p2->x_vel = p2->x_vel * -1;
-			}
-			if (p2->y <= 0 || p2->y >= HEIGHT)
-			{
-				p2->y_vel = p2->y_vel * -1;
-
 			}
 		}
 	}
@@ -135,15 +129,17 @@ int main(int argc, char* argv[])
 	}
 
 	
-	GenerateParticles(100, 51, 1);
+	GenerateParticles(10, 3000, 1);
 	while (1) {
 		CheckInputs();
 		SDL_RenderClear(renderer);
 		DrawAllParticles(renderer);
-		applyRule(&red_particles, &blue_particles, 1);
-		applyRule(&red_particles, &red_particles, 0.001);
+		SDL_RenderPresent(renderer);
+		applyRule(&red_particles, &blue_particles, -2);
+		applyRule(&red_particles, &red_particles, 1);
 
-		applyRule(&blue_particles, &red_particles, 1);
+		applyRule(&blue_particles, &red_particles, 2);
+		applyRule(&blue_particles, &blue_particles, 0);
 	}
 
 	cin.get();
