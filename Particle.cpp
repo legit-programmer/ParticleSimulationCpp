@@ -19,8 +19,47 @@ void Particle::Draw(SDL_Renderer *renderer)
 	rect.h = h;
 	
 
-	SDL_SetRenderDrawColor(renderer, R, G, B, 255);
 	SDL_RenderFillRect(renderer, &rect);
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	
+}
+
+
+void Particle::DrawCircle(SDL_Renderer* renderer, int32_t radius)
+{
+    const int32_t diameter = (radius * 2);
+
+    int32_t x = (radius - 1);
+    int32_t y = 0;
+    int32_t tx = 1;
+    int32_t ty = 1;
+    int32_t error = (tx - diameter);
+
+    while (x >= y)
+    {
+        
+	    SDL_SetRenderDrawColor(renderer, R, G, B, 255);
+        SDL_RenderDrawPoint(renderer, this->x + x, this->y - y);
+        SDL_RenderDrawPoint(renderer, this->x + x, this->y + y);
+        SDL_RenderDrawPoint(renderer, this->x - x, this->y - y);
+        SDL_RenderDrawPoint(renderer, this->x - x, this->y + y);
+        SDL_RenderDrawPoint(renderer, this->x + y, this->y - x);
+        SDL_RenderDrawPoint(renderer, this->x + y, this->y + x);
+        SDL_RenderDrawPoint(renderer, this->x - y, this->y - x);
+        SDL_RenderDrawPoint(renderer, this->x - y, this->y + x);
+	    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
+        if (error <= 0)
+        {
+            ++y;
+            error += ty;
+            ty += 2;
+        }
+
+        if (error > 0)
+        {
+            --x;
+            tx += 2;
+            error += (tx - diameter);
+        }
+    }
 }

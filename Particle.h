@@ -9,5 +9,6 @@ public:
 	int R, G, B;
 public:
 	void Draw(SDL_Renderer* renderer);
+	void DrawCircle(SDL_Renderer* renderer, int32_t radius);
 };
 
