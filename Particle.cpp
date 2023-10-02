@@ -1,6 +1,10 @@
 #include "Particle.h"
 #include "SDL.h"
 #include <iostream>
+
+
+
+
 Particle::Particle(int x_, int y_, int w_, int h_, float x_vel_, float y_vel_, int R_, int G_, int B_)
 {
 	std::cout << "Constructor running, chainging values" << std::endl;

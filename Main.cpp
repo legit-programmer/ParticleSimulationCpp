@@ -6,8 +6,19 @@
 #include <vector>
 #include <cmath>
 #include <random>
+#include "imgui.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_sdlrenderer2.h"
+#include "GUI.h"
+#include <stdio.h>
+
+#if !SDL_VERSION_ATLEAST(2,0,17)
+#error This backend requires SDL 2.0.17+ because of SDL_RenderGeometry() function
+#endif
+
 
 using namespace std;
+
 
 vector<Particle> red_particles;
 vector<Particle> blue_particles;
@@ -18,9 +29,6 @@ std::mt19937 gen(rd()); // seed the generator
 std::uniform_int_distribution<> wdistr(0, WIDTH);
 std::uniform_int_distribution<> hdistr(0, HEIGHT);// define the range
 
-//Particle* red_particles_arr[10000];
-//Particle* blue_particles_arr[10000];
-
 SDL_Window* window = SDL_CreateWindow("Particle Simulation", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, 0);
 SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
@@ -28,14 +36,14 @@ SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED
 void GenerateParticles(int red_cout, int blue_count, int green_count) {
 
 	for (int i = 0; i < red_cout; i++)
-		red_particles.push_back(Particle(wdistr(gen), hdistr(gen), 5, 5, 1.0f, 1.0f, 255, 0, 0));
+		red_particles.push_back(Particle(wdistr(gen), hdistr(gen), 5, 5, 0.0f, 0.0f, 255, 0, 0));
 		
 
 	for (int i = 0; i < green_count; i++)
 		green_particles.push_back(Particle(wdistr(gen),hdistr(gen), 5, 5, 0.0f, 0.0f, 0, 255, 0));
 
 	for (int i = 0; i < blue_count; i++)
-		blue_particles.push_back(Particle(wdistr(gen), hdistr(gen), 5, 5, 0.0f, 0.0f, 255, 255, 255));
+		blue_particles.push_back(Particle(wdistr(gen), hdistr(gen), 5, 5, 0.0f, 0.0f, 0, 0, 255));
 		
 
 }
@@ -66,7 +74,7 @@ void applyRule(vector<Particle>* particle1, vector<Particle>* particle2, float s
 				float dx = p2->x - p1->x;
 				float dy = p2->y - p1->y;
 				float distance = sqrt(pow(dx, 2) + pow(dy, 2));
-				if (distance < 50) {
+				if (distance < 80) {
 
 					float force = 1 / distance;
 					float fx = dx / force;
@@ -97,7 +105,6 @@ void applyRule(vector<Particle>* particle1, vector<Particle>* particle2, float s
 }
 
 
-
 int main(int argc, char* argv[])
 {
 
@@ -110,29 +117,50 @@ int main(int argc, char* argv[])
 		cout << "SDL initialization succeeded!";
 	}
 
+#ifdef SDL_HINT_IME_SHOW_UI
+	SDL_SetHint(SDL_HINT_IME_SHOW_UI, "1");
+#endif
+
 
 	
 	if (!window) {
 		cout << "Error loading the window" << endl;
 	}
 
+
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;    
 	
-	GenerateParticles(100, 1000, 0);
+
+	
+	ImGui::StyleColorsDark();
+	ImGui_ImplSDL2_InitForSDLRenderer(window, renderer);
+	ImGui_ImplSDLRenderer2_Init(renderer);
+	
+	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+	
+	GenerateParticles(10, 1000, 100);
 	while (1) {
-		CheckInputs();
+		CheckInputs(window, renderer);
+		
+		PrepareGUIComponent(&red_particles, &green_particles, &blue_particles);
+		
 		SDL_RenderClear(renderer);
+
 		DrawAllParticles(renderer);
-		applyRule(&blue_particles, &red_particles, 10);
-		applyRule(&green_particles, &blue_particles, -0.001);
+
+		RenderGUI(renderer, io);
 		
-		
-		//applyRule(&red_particles, &blue_particles, -0.001);
-		/*applyRule(&red_particles, &red_particles, 5);*/
-		applyRule(&blue_particles, &blue_particles, 0.001);
+		ApplyAllRules(&red_particles, &green_particles, &blue_particles);
 		SDL_RenderPresent(renderer);
 		SDL_Delay(10);
 	}
 
-	cin.get();
+	std::cin.get();
 	return 0;
 }
+
+
