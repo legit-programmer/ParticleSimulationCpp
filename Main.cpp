@@ -48,6 +48,7 @@ void GenerateParticles(int red_cout, int blue_count, int green_count) {
 
 }
 
+
 void DrawAllParticles(SDL_Renderer* renderer) {
 	if (red_particles.size()>0)
 		for (int i = 0; i <= red_particles.size() - 1; i++)
@@ -74,25 +75,27 @@ void applyRule(vector<Particle>* particle1, vector<Particle>* particle2, float s
 				float dx = p2->x - p1->x;
 				float dy = p2->y - p1->y;
 				float distance = sqrt(pow(dx, 2) + pow(dy, 2));
-				if (distance < 80) {
+				if (distance < 80 && distance>20) {
 
-					float force = 1 / distance;
-					float fx = dx / force;
-					float fy = dy / force;
+					float force = strength * 1 / distance;
+					//float fx = dx / force;
+					//float fy = dy / force;
+					float fx = dx * force;
+					float fy = dy * force;
 					
 					
-					p1->x_vel += fx * strength * 0.005;
-					p1->y_vel += fy * strength * 0.005;
+					p1->x_vel += fx*0.5;
+					p1->y_vel += fy*0.5;
 					
-					if (p1->x <= 0 || p1->x >= WIDTH)
-						p1->x_vel *= -1;
+					if (p1->x <=0 || p1->x >= WIDTH)
+						p1->x_vel *= -5;
 					if (p1->y <= 0 || p1->y >= HEIGHT)
-						p1->y_vel *= -1;
+						p1->y_vel *= -5;
 					
 					
 					
-						p1->x += p1->x_vel;
-						p1->y += p1->y_vel;
+					p1->x += p1->x_vel;
+					p1->y += p1->y_vel;
 					
 				}
 
@@ -142,7 +145,7 @@ int main(int argc, char* argv[])
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 	
-	GenerateParticles(10, 1000, 100);
+	GenerateParticles(10, 0, 1000);
 	while (1) {
 		CheckInputs(window, renderer);
 		

@@ -8,11 +8,11 @@
 void applyRule(std::vector<Particle>* particle1, std::vector<Particle>* particle2, float strength);
 
 float R2R = 0.0f;
-float R2G = 0.0f;
+float R2G = -0.01f;
 float R2B = 0.0f;
 
 float G2G = 0.0f;
-float G2R = 0.0f;
+float G2R = 0.01f;
 float G2B = 0.0f;
 
 float B2B = 0.0f;
