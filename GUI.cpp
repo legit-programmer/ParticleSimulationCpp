@@ -11,11 +11,11 @@ void GenerateParticles(int red_cout, int blue_count, int green_count);
 
 
 float R2R = 0.0f;
-float R2G = -0.01f;
+float R2G = 0.0f;
 float R2B = 0.0f;
 
 float G2G = 0.0f;
-float G2R = 0.01f;
+float G2R = 0.0f;
 float G2B = 0.0f;
 
 float B2B = 0.0f;
@@ -51,6 +51,12 @@ void PrepareGUIComponent(std::vector<Particle>* particle1, std::vector<Particle>
 			ClearVector(particle3);
 		}
 	}
+
+	if (ImGui::Button("Reset", ImVec2(100, 40))) {
+		R2R = R2G = R2B = G2G = G2R = G2B = B2G = B2B = B2R = 0.0f;
+		std::cout << 'h';
+	}
+
 	ImGui::SetWindowFontScale(2.0f);
 
 
@@ -60,13 +66,13 @@ void PrepareGUIComponent(std::vector<Particle>* particle1, std::vector<Particle>
 	if (ImGui::Button("ClearR", ImVec2(80, 40))) {
 		ClearVector(particle1);
 	}
-	if (ImGui::SliderInt("AmountR", &amount_r, 0, 500)) {
+	if (ImGui::SliderInt("AmountR", &amount_r, 0, 1000)) {
 		RefreshParticles(particle1, particle2, particle3);
 	}
 	
-	ImGui::SliderFloat("REDxRED", &R2R, -0.10f, 1.10f);
-	ImGui::SliderFloat("REDxGREEN", &R2G, -0.10f, 1.10f);
-	ImGui::SliderFloat("REDxBLUE", &R2B, -3.0f, 3.0f);
+	ImGui::SliderFloat("REDxRED", &R2R, -10.10f, 10.10f);
+	ImGui::SliderFloat("REDxGREEN", &R2G, -10.10f, 10.10f);
+	ImGui::SliderFloat("REDxBLUE", &R2B, -10.10f, 10.10f);
 	
 	ImGui::SetWindowFontScale(2.0f);
 	ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "GREEN");
@@ -74,28 +80,28 @@ void PrepareGUIComponent(std::vector<Particle>* particle1, std::vector<Particle>
 	if (ImGui::Button("ClearG", ImVec2(80, 40))) {
 		ClearVector(particle2);
 	}
-	if (ImGui::SliderInt("AmountG", &amount_g, 0, 500)) {
+	if (ImGui::SliderInt("AmountG", &amount_g, 0, 1000)) {
 		RefreshParticles(particle1, particle2, particle3);
 	}
 	
-	ImGui::SliderFloat("GREENxRED", &G2R, -0.10f, 1.10f);
-	ImGui::SliderFloat("GREENxGREEN", &G2G, -3.0f, 3.0f);
-	ImGui::SliderFloat("GREENxBLUE", &G2B, -3.0f, 3.0f);
-	
+	ImGui::SliderFloat("GREENxRED", &G2R, -10.10f, 10.10f);
+	ImGui::SliderFloat("GREENxGREEN", &G2G, -10.10f, 10.10f);
+	ImGui::SliderFloat("GREENxBLUE", &G2B, -10.10f, 10.10f);
+
 	ImGui::SetWindowFontScale(2.0f);
 	ImGui::TextColored(ImVec4(0.0f, 0.0f, 1.0f, 1.0f), "BLUE");
 	ImGui::SetWindowFontScale(1.5f);
 	if (ImGui::Button("ClearB", ImVec2(
-80, 40))) {
+		80, 40))) {
 		ClearVector(particle3);
 	}
-	if (ImGui::SliderInt("AmountB", &amount_b, 0, 500)) {
+	if (ImGui::SliderInt("AmountB", &amount_b, 0, 1000)) {
 		RefreshParticles(particle1, particle2, particle3);
 	}
-	
-	ImGui::SliderFloat("BLUExRED", &B2R, -3.0f, 3.0f);
-	ImGui::SliderFloat("BLUExGREEN2", &B2G, -3.0f, 3.0f);
-	ImGui::SliderFloat("BLUExBLUE", &B2B, -3.0f, 3.0f);
+
+	ImGui::SliderFloat("BLUExRED", &B2R, -10.10f, 10.10f);
+	ImGui::SliderFloat("BLUExGREEN2", &B2G, -10.10f, 10.10f);
+	ImGui::SliderFloat("BLUExBLUE", &B2B, -10.10f, 10.10f);
 
 
 

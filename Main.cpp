@@ -136,6 +136,13 @@ int main(int argc, char* argv[])
 		cout << "Error loading the window" << endl;
 	}
 
+	if (!renderer) {
+		cout << "No renderer"<<endl;
+	}
+	else {
+		cout << "renderer initialized" << endl;
+	}
+
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -165,7 +172,7 @@ int main(int argc, char* argv[])
 		
 		ApplyAllRules(&red_particles, &green_particles, &blue_particles);
 		SDL_RenderPresent(renderer);
-		SDL_Delay(10);
+		
 	}
 
 	std::cin.get();
