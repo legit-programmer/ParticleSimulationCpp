@@ -4,8 +4,11 @@
 #include "SDL.h"
 #include <vector>
 #include "Particle.h"
+#include <iostream>
 
 void applyRule(std::vector<Particle>* particle1, std::vector<Particle>* particle2, float strength);
+void GenerateParticles(int red_cout, int blue_count, int green_count);
+
 
 float R2R = 0.0f;
 float R2G = -0.01f;
@@ -19,8 +22,20 @@ float B2B = 0.0f;
 float B2R = 0.0f;
 float B2G = 0.0f;
 
+int amount_r;
+int amount_g;
+int amount_b;
+
 void ClearVector(std::vector<Particle>* particles) {
 	particles->clear();
+}
+
+void RefreshParticles(std::vector<Particle>* particle1, std::vector<Particle>* particle2, std::vector<Particle>* particle3) {
+	ClearVector(particle1);
+	ClearVector(particle2);
+	ClearVector(particle3);
+
+	GenerateParticles(amount_r, amount_b, amount_g);
 }
 
 void PrepareGUIComponent(std::vector<Particle>* particle1, std::vector<Particle>* particle2, std::vector<Particle>* particle3) {
@@ -45,9 +60,12 @@ void PrepareGUIComponent(std::vector<Particle>* particle1, std::vector<Particle>
 	if (ImGui::Button("ClearR", ImVec2(80, 40))) {
 		ClearVector(particle1);
 	}
-
-	ImGui::SliderFloat("REDxRED", &R2R, -3.0f, 3.0f);
-	ImGui::SliderFloat("REDxGREEN", &R2G, -3.0f, 3.0f);
+	if (ImGui::SliderInt("AmountR", &amount_r, 0, 500)) {
+		RefreshParticles(particle1, particle2, particle3);
+	}
+	
+	ImGui::SliderFloat("REDxRED", &R2R, -0.10f, 1.10f);
+	ImGui::SliderFloat("REDxGREEN", &R2G, -0.10f, 1.10f);
 	ImGui::SliderFloat("REDxBLUE", &R2B, -3.0f, 3.0f);
 	
 	ImGui::SetWindowFontScale(2.0f);
@@ -56,7 +74,11 @@ void PrepareGUIComponent(std::vector<Particle>* particle1, std::vector<Particle>
 	if (ImGui::Button("ClearG", ImVec2(80, 40))) {
 		ClearVector(particle2);
 	}
-	ImGui::SliderFloat("GREENxRED", &G2R, -3.0f, 3.0f);
+	if (ImGui::SliderInt("AmountG", &amount_g, 0, 500)) {
+		RefreshParticles(particle1, particle2, particle3);
+	}
+	
+	ImGui::SliderFloat("GREENxRED", &G2R, -0.10f, 1.10f);
 	ImGui::SliderFloat("GREENxGREEN", &G2G, -3.0f, 3.0f);
 	ImGui::SliderFloat("GREENxBLUE", &G2B, -3.0f, 3.0f);
 	
@@ -67,6 +89,10 @@ void PrepareGUIComponent(std::vector<Particle>* particle1, std::vector<Particle>
 80, 40))) {
 		ClearVector(particle3);
 	}
+	if (ImGui::SliderInt("AmountB", &amount_b, 0, 500)) {
+		RefreshParticles(particle1, particle2, particle3);
+	}
+	
 	ImGui::SliderFloat("BLUExRED", &B2R, -3.0f, 3.0f);
 	ImGui::SliderFloat("BLUExGREEN2", &B2G, -3.0f, 3.0f);
 	ImGui::SliderFloat("BLUExBLUE", &B2B, -3.0f, 3.0f);

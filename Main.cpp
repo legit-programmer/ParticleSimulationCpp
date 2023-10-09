@@ -36,72 +36,78 @@ SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED
 void GenerateParticles(int red_cout, int blue_count, int green_count) {
 
 	for (int i = 0; i < red_cout; i++)
-		red_particles.push_back(Particle(wdistr(gen), hdistr(gen), 5, 5, 0.0f, 0.0f, 255, 0, 0));
+		red_particles.push_back(Particle(wdistr(gen), hdistr(gen), 10, 10, 0.0f, 0.0f, 255, 0, 0));
 		
 
 	for (int i = 0; i < green_count; i++)
-		green_particles.push_back(Particle(wdistr(gen),hdistr(gen), 5, 5, 0.0f, 0.0f, 0, 255, 0));
+		green_particles.push_back(Particle(wdistr(gen),hdistr(gen), 1, 1, 0.0f, 0.0f, 0, 255, 0));
 
 	for (int i = 0; i < blue_count; i++)
-		blue_particles.push_back(Particle(wdistr(gen), hdistr(gen), 5, 5, 0.0f, 0.0f, 0, 0, 255));
+		blue_particles.push_back(Particle(wdistr(gen), hdistr(gen), 1, 1, 0.0f, 0.0f, 0, 0, 255));
 		
 
 }
 
 
 void DrawAllParticles(SDL_Renderer* renderer) {
-	if (red_particles.size()>0)
+	if (red_particles.size() > 0)
 		for (int i = 0; i <= red_particles.size() - 1; i++)
-			red_particles[i].DrawCircle(renderer, 5);
+			red_particles[i].Draw(renderer);
+			//red_particles[i].DrawCircle(renderer, 5);
 		
 	if (blue_particles.size() > 0)
 		for (int i = 0; i <= blue_particles.size() - 1; i++)
-			blue_particles[i].DrawCircle(renderer, 5);
+			blue_particles[i].Draw(renderer);
+
+			//blue_particles[i].DrawCircle(renderer, 5);
 		
 
 	if (green_particles.size() > 0)
 		for (int i = 0; i <= green_particles.size() - 1; i++)
-			green_particles[i].DrawCircle(renderer, 5);
+			green_particles[i].Draw(renderer);
+
+			//green_particles[i].DrawCircle(renderer, 5);
 }
 
 void applyRule(vector<Particle>* particle1, vector<Particle>* particle2, float strength) {
 
 	for (int i = 0; i < particle1->size(); i++) {
+		float fx = 0;
+		float fy = 0;
+		Particle* p1 = &particle1->at(i);
 		for (int j = 0; j < particle2->size(); j++) {
-			if (&particle1->at(i) != &particle2->at(j)) {
-				Particle* p1 = &particle1->at(i);
+			
 				Particle* p2 = &particle2->at(j);
 
-				float dx = p2->x - p1->x;
-				float dy = p2->y - p1->y;
+				float dx = p1->x - p2->x ;
+				float dy = p1->y - p2->y;
 				float distance = sqrt(pow(dx, 2) + pow(dy, 2));
-				if (distance < 80 && distance>20) {
 
-					float force = strength * 1 / distance;
-					//float fx = dx / force;
-					//float fy = dy / force;
-					float fx = dx * force;
-					float fy = dy * force;
-					
-					
-					p1->x_vel += fx*0.5;
-					p1->y_vel += fy*0.5;
-					
-					if (p1->x <=0 || p1->x >= WIDTH)
-						p1->x_vel *= -5;
-					if (p1->y <= 0 || p1->y >= HEIGHT)
-						p1->y_vel *= -5;
-					
-					
-					
-					p1->x += p1->x_vel;
-					p1->y += p1->y_vel;
-					
+				if (distance < 80 && distance>0) {
+
+					float force = 1 / distance * strength;
+
+
+					fx += dx * force;
+					fy += dy * force;
+
 				}
-
-				
-			}
 		}
+		p1->x_vel = (p1->x_vel + fx)*0.5;
+		p1->y_vel = (p1->y_vel + fy) * 0.5;
+		
+		p1->x += p1->x_vel;
+		p1->y += p1->y_vel;
+										
+		if (p1->x <= 0 || p1->x >= WIDTH)
+			p1->x_vel = p1->x_vel* (-5);
+			
+
+		if (p1->y <= 0 || p1->y >= HEIGHT)
+			p1->y_vel = p1->y_vel * (-1);
+					
+					
+					
 	}
 
 	
@@ -145,7 +151,7 @@ int main(int argc, char* argv[])
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 	
-	GenerateParticles(10, 0, 1000);
+	
 	while (1) {
 		CheckInputs(window, renderer);
 		
