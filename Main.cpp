@@ -25,7 +25,7 @@ vector<Particle> blue_particles;
 vector<Particle> green_particles;
 
 std::random_device rd; // obtain a random number from hardware
-std::mt19937 gen(rd()); // seed the generator
+std::mt19937 gen(rd());		// seed the generator
 std::uniform_int_distribution<> wdistr(0, WIDTH);
 std::uniform_int_distribution<> hdistr(0, HEIGHT);// define the range
 

@@ -5,9 +5,13 @@
 #include <vector>
 #include "Particle.h"
 #include <iostream>
+#include <random>
 
 void applyRule(std::vector<Particle>* particle1, std::vector<Particle>* particle2, float strength);
 void GenerateParticles(int red_cout, int blue_count, int green_count);
+
+
+std::uniform_int_distribution<> range(-10.10f,10.10f);
 
 
 float R2R = 0.0f;
@@ -54,8 +58,27 @@ void PrepareGUIComponent(std::vector<Particle>* particle1, std::vector<Particle>
 
 	if (ImGui::Button("Reset", ImVec2(100, 40))) {
 		R2R = R2G = R2B = G2G = G2R = G2B = B2G = B2B = B2R = 0.0f;
-		std::cout << 'h';
+		
 	}
+	
+	if (ImGui::Button("Random", ImVec2(100, 40))) {
+		std::random_device rd;
+		std::mt19937 gen(rd()); // seed the generator
+
+		
+		R2R = range(gen);
+		R2G = range(gen);
+		R2B = range(gen);
+		G2G = range(gen);
+		G2R = range(gen);
+		G2B = range(gen);
+		B2B = range(gen);
+		B2R = range(gen);
+		B2G = range(gen);
+
+	}
+
+
 
 	ImGui::SetWindowFontScale(2.0f);
 
