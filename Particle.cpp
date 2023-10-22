@@ -19,8 +19,8 @@ void Particle::Draw(SDL_Renderer *renderer)
 	SDL_Rect rect;
 	rect.x = x;
 	rect.y = y;
-	rect.w = 2;
-	rect.h = 2;
+	rect.w = 4;
+	rect.h = 4;
 	
     
     SDL_SetRenderDrawColor(renderer, this->R, this->G, this->B, 255);

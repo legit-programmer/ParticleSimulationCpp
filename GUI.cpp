@@ -11,7 +11,8 @@ void applyRule(std::vector<Particle>* particle1, std::vector<Particle>* particle
 void GenerateParticles(int red_cout, int blue_count, int green_count);
 
 
-std::uniform_int_distribution<> range(-10.10f,10.10f);
+//std::uniform_int_distribution<> range()
+std::uniform_real_distribution<> range(-5.10f, 5.10f);
 
 
 float R2R = 0.0f;
@@ -53,6 +54,7 @@ void PrepareGUIComponent(std::vector<Particle>* particle1, std::vector<Particle>
 			ClearVector(particle1);
 			ClearVector(particle2);
 			ClearVector(particle3);
+			amount_r = amount_g = amount_b = 0;
 		}
 	}
 

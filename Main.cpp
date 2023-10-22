@@ -36,7 +36,7 @@ SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED
 void GenerateParticles(int red_cout, int blue_count, int green_count) {
 
 	for (int i = 0; i < red_cout; i++)
-		red_particles.push_back(Particle(wdistr(gen), hdistr(gen), 10, 10, 0.0f, 0.0f, 255, 0, 0));
+		red_particles.push_back(Particle(wdistr(gen), hdistr(gen), 1, 1, 0.0f, 0.0f, 255, 0, 0));
 		
 
 	for (int i = 0; i < green_count; i++)
